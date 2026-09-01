@@ -1,0 +1,30 @@
+bundle:
+  name: energy-rag-production
+
+variables:
+  prompt_name:
+    default: main.genai.energy_rag_answer
+  model_endpoint:
+    default: databricks-llama-4-maverick
+  vector_search_endpoint:
+    default: energy-vs-endpoint
+  vector_index_name:
+    default: main.genai.energy_docs_index
+  source_table:
+    default: main.genai.energy_docs_chunks
+  eval_dataset_name:
+    default: main.genai.energy_rag_eval
+
+resources:
+  experiments:
+    rag_experiment:
+      name: /Shared/${bundle.target}/energy-rag
+
+targets:
+  dev:
+    default: true
+    mode: development
+  staging:
+    mode: production
+  prod:
+    mode: production

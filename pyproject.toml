@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "energy-rag"
+version = "0.2.0"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115,<1",
+  "pydantic>=2.10,<3",
+  "pydantic-settings>=2.7,<3",
+  "uvicorn>=0.32,<1"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3,<10",
+  "pytest-cov>=6,<8",
+  "httpx>=0.28,<1",
+  "ruff>=0.9,<1",
+  "black>=25,<26",
+  "mypy>=1.15,<2"
+]
+databricks = [
+  "mlflow[databricks]>=3.1",
+  "databricks-sdk>=0.50",
+  "databricks-vectorsearch>=0.50"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = ["integration: requires Databricks resources"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.black]
+line-length = 100

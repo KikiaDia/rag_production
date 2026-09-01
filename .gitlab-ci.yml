@@ -1,0 +1,63 @@
+stages: [quality, test, evaluate, package, validate, deploy_staging, smoke, deploy_prod]
+
+default:
+  image: python:3.11
+
+quality:
+  stage: quality
+  script:
+    - pip install -e ".[dev]"
+    - ruff check src tests evaluation
+    - black --check src tests evaluation
+
+unit_functional:
+  stage: test
+  script:
+    - pip install -e ".[dev]"
+    - pytest tests/unit tests/functional -q --cov=src
+
+integration:
+  stage: test
+  rules:
+    - if: '$RUN_DATABRICKS_INTEGRATION == "1"'
+  script:
+    - pip install -e ".[dev,databricks]"
+    - pytest tests/integration -m integration -q
+
+genai_quality_gate:
+  stage: evaluate
+  script:
+    - pip install -e ".[dev]"
+    - python evaluation/run_offline_eval.py
+  artifacts:
+    paths: [evaluation/results/offline_eval.json]
+
+release_manifest:
+  stage: package
+  script:
+    - python scripts/release_manifest.py
+  artifacts:
+    paths: [release-manifest.json, requirements.lock]
+
+validate_staging:
+  stage: validate
+  script:
+    - databricks bundle validate -t staging
+
+deploy_staging:
+  stage: deploy_staging
+  script:
+    - databricks bundle deploy -t staging
+
+smoke_staging:
+  stage: smoke
+  script:
+    - python scripts/smoke_test.py
+
+deploy_prod:
+  stage: deploy_prod
+  when: manual
+  rules:
+    - if: '$CI_COMMIT_TAG'
+  script:
+    - databricks bundle deploy -t prod

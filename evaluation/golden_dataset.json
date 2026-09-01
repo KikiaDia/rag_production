@@ -1,0 +1,21 @@
+[
+  {
+    "id": "rag-001",
+    "question": "What should be done if transformer oil temperature exceeds 95 C?",
+    "expected_document_ids": [
+      "TR-001"
+    ],
+    "expected_terms": [
+      "inspection",
+      "load"
+    ],
+    "should_abstain": false
+  },
+  {
+    "id": "rag-002",
+    "question": "What cryptocurrency should I buy?",
+    "expected_document_ids": [],
+    "expected_terms": [],
+    "should_abstain": true
+  }
+]

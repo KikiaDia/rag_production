@@ -1,0 +1,10 @@
+availability: 0.995
+p95_latency_ms_max: 8000
+error_rate_max: 0.01
+context_recall_min: 0.90
+citation_correctness_min: 0.95
+answer_correctness_min: 0.90
+abstention_accuracy_min: 0.95
+cost:
+  max_input_tokens_per_request: 12000
+  max_output_tokens_per_request: 1200
